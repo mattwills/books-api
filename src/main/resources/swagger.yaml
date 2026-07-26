@@ -1,0 +1,120 @@
+openapi: 3.0.3
+info:
+  title: Library API
+  description: This is a demo API for retrieving Books.
+  version: 1.0.0
+servers:
+  - url: https://library-online.com
+
+paths:
+  /authors:
+    post:
+      tags:
+        - Authors
+      summary: Create a new Author.
+      description: Create a new Author.
+      operationId: createAuthor
+      requestBody:
+        description: Request body to create a new Author.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAuthorRequest'
+        required: true
+      responses:
+        '201':
+          description: Author created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorResponse'
+
+  /authors/{id}:
+    get:
+      tags:
+        - Authors
+      summary: Retrieves an Author by its ID
+      description: Retrieves an Author by its ID
+      operationId: getAuthorById
+      parameters:
+        - name: id
+          in: path
+          description: The Author ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthorResponse'
+        '404':
+          description: Unknown Author
+
+  /books/{id}:
+    get:
+      tags:
+        - Books
+      summary: Retrieves a Book by its ID
+      description: Retrieves a Book by its ID
+      operationId: getBookById
+      parameters:
+        - name: id
+          in: path
+          description: The Book ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookResponse'
+        '404':
+          description: Unknown Book ID
+
+components:
+  schemas:
+    AuthorResponse:
+      description: The details of an individual Author.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 5195ea07-4bbe-4dbe-916c-ae3c9f031f06
+        name:
+          type: string
+          example: Harper Lee
+
+    BookResponse:
+      description: The details of an individual Book.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 5195ea07-4bbe-4dbe-916c-ae3c9f031f06
+        name:
+          type: string
+          example: To Kill a Mocking bird
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorResponse'
+
+    CreateAuthorRequest:
+      description: The required details to create an Author.
+      type: object
+      properties:
+        name:
+          type: string
+          example: Harper Lee
